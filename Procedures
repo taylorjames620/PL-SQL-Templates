@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+-- This is a template that can be copied and pasted into Oracle --
+-- sql developer for the purposes of creating a procedure       --
+------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE <<procedure name>> (<<parameter1>> IN VARCHAR2, outfile_param IN VARCHAR2)
+
+IS
+
+----------> Declaration block <----------
+------------------------------------------------------------------
+-- You may uncomment/comment the declare statement below if     --
+-- needing to test the procedure with dbms_output.put_line      --
+------------------------------------------------------------------
+DECLARE
+
+CURSOR <<cursor name>> IS
+ SELECT <<field name>>
+ FROM <<table name>>
+ WHERE <<conditions>>;
+
+------------------------------------------------------------------
+-- The record name below can be named anything that you decide. --
+-- The idea is to create a record that acts as a repository for -- 
+-- the fields being selected within the query above.            --
+------------------------------------------------------------------
+
+ <<record name>> <<cursor name>>%ROWTYPE;
+ output_file UTL_FILE.FILE_TYPE;
+ 
+ ----------> Execution block <----------
+BEGIN
+ 
+ output_file :=  utl_file.fopen(<<destination directory>>, outfile_param,'W');
+ 
+ OPEN <<cursor name>>;
+  FETCH <<cursor name>>
+  INTO <<record name>>;
+  
+   WHILE <<cursor name>>%FOUND
+    LOOP
+  
+    -- utl_file.put_line(output_file,
+     dbms_output.put_line('<<header name>>' || ', ' || '<<header name>>');
+    
+    FETCH <<cursor name>>
+    INTO <<record name>>;
+    
+   ----------> Exception handling <----------
+    EXCEPTION
+    EXIT WHEN <<cursor name>>%NOTFOUND;
+    
+    END LOOP;
+    
+    -- utl_file.fflush(output_file);
+    -- utl_file.fclose(output_file);
+    
+ CLOSE <<cursor name>>;
+END <<procedure name>>;
